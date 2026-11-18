@@ -1,7 +1,7 @@
 # @compmd/lezer
 
 CompMD's grammar for CodeMirror: an [`@lezer/markdown`](https://github.com/lezer-parser/markdown) extension that adds
-[CompMD](https://github.com/comp-markdown/compmd)'s syntax (spec v1) to CommonMark and GFM, with highlighting tags.
+[CompMD](https://compmd.dev)'s syntax ([spec](https://compmd.dev/spec/) v1) to CommonMark and GFM, with highlighting tags.
 
 ```ts
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
