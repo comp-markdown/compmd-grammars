@@ -1,0 +1,11 @@
+# What builds write: Rust's, Node's, and `tree-sitter build`'s
+target/
+build/
+prebuilds/
+node_modules/
+*.dylib
+*.so
+*.dll
+*.wasm
+*.o
+*.obj

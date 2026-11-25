@@ -1,0 +1,13 @@
+{
+  "name": "compmd-grammars-tests",
+  "private": true,
+  "description": "The test set the grammars share: documents with the token each span should have, and the spec's examples and the conformance set, which every grammar must parse.",
+  "type": "module",
+  "scripts": {
+    "test": "node --liftoff-only tree-sitter.js",
+    "parse": "node --liftoff-only parse.js"
+  },
+  "devDependencies": {
+    "web-tree-sitter": "0.27.2"
+  }
+}

@@ -1,0 +1,53 @@
+# CI: the generated parsers are what their grammars generate, the injection queries what syntax/injections.json says,
+# and every test passes: each grammar's corpus, the bindings', the shared test set, and the spec's examples and the
+# conformance set of comp-markdown/compmd at the release tests/compmd-version names.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Versions (package.json's devEngines, tests/compmd-version)
+        id: versions
+        run: |
+          echo "pnpm=$(jq -r .devEngines.packageManager.version package.json)" >> "$GITHUB_OUTPUT"
+          echo "node=$(jq -r .devEngines.runtime.version package.json)" >> "$GITHUB_OUTPUT"
+          echo "compmd=$(cat tests/compmd-version)" >> "$GITHUB_OUTPUT"
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        with:
+          version: ${{ steps.versions.outputs.pnpm }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ steps.versions.outputs.node }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Tree-sitter grammars commit their generated parsers, which editors build from.
+      - name: The generated parsers and injection queries are committed
+        run: |
+          pnpm --dir tree-sitter run generate
+          git diff --exit-code
+      - run: pnpm --dir tree-sitter test
+      - run: cargo test --manifest-path tree-sitter/Cargo.toml
+      - run: pnpm --dir tree-sitter run build:wasm
+      - run: pnpm --dir tests test
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: comp-markdown/compmd
+          ref: ${{ steps.versions.outputs.compmd }}
+          path: compmd
+      - run: pnpm --dir tests run parse ../compmd

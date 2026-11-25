@@ -1,0 +1,143 @@
+================================================================================
+An inline component with params (spec §4.4)
+================================================================================
+Run :badge[beta *now*]{tone=info .x title="A {{md.doc.t}}"} today.
+--------------------------------------------------------------------------------
+
+(inline
+  (inline_component
+    (component_marker)
+    (component_name)
+    (fallback
+      (emphasis
+        (emphasis_delimiter)
+        (emphasis_delimiter)))
+    (param_list
+      (param
+        (param_key
+          (param_name))
+        (bare_value))
+      (param
+        (class_name))
+      (param
+        (param_key
+          (param_name))
+        (string
+          (string_content)
+          (interpolation
+            (interpolation_path)))))))
+
+================================================================================
+An inline component nested in a fallback (spec §4.4)
+================================================================================
+:tip[see :badge[new]] here
+--------------------------------------------------------------------------------
+
+(inline
+  (inline_component
+    (component_marker)
+    (component_name)
+    (fallback
+      (inline_component
+        (component_marker)
+        (component_name)
+        (fallback)))))
+
+================================================================================
+No inline component after a letter, a digit or a colon (spec §3.2, rule 4)
+================================================================================
+a:b[c] at 10:30[x] and std::vec[0]
+--------------------------------------------------------------------------------
+
+(inline
+  (shortcut_link
+    (link_text))
+  (shortcut_link
+    (link_text))
+  (shortcut_link
+    (link_text)))
+
+================================================================================
+A code span binds tighter than a fallback's brackets (spec §3.2, rule 9)
+================================================================================
+:a[b `c]` d] e
+--------------------------------------------------------------------------------
+
+(inline
+  (inline_component
+    (component_marker)
+    (component_name)
+    (fallback
+      (code_span
+        (code_span_delimiter)
+        (code_span_delimiter)))))
+
+================================================================================
+After a fallback, `{{` is an interpolation (spec §3.1)
+================================================================================
+:badge[x]{{md.doc.y}}
+--------------------------------------------------------------------------------
+
+(inline
+  (inline_component
+    (component_marker)
+    (component_name)
+    (fallback))
+  (interpolation
+    (interpolation_path)))
+
+================================================================================
+A `{` that starts no param list is text (spec §5)
+================================================================================
+:badge[x]{tone="info} and more
+--------------------------------------------------------------------------------
+
+(inline
+  (inline_component
+    (component_marker)
+    (component_name)
+    (fallback)))
+
+================================================================================
+Interpolation, and what isn't one (spec §8.1, W106)
+================================================================================
+{{ md.doc.version }} and {{a b}} and \{{x}}
+--------------------------------------------------------------------------------
+
+(inline
+  (interpolation
+    (interpolation_path))
+  (backslash_escape))
+
+================================================================================
+Math by Pandoc's rule (spec §2.3)
+================================================================================
+$x^2$ costs $5 and $10, $x{y$ z}$ and $$a+b$$
+--------------------------------------------------------------------------------
+
+(inline
+  (latex_block
+    (latex_span_delimiter)
+    (latex_content)
+    (latex_span_delimiter))
+  (latex_block
+    (latex_span_delimiter)
+    (latex_content)
+    (latex_span_delimiter))
+  (latex_block
+    (latex_span_delimiter)
+    (latex_content)
+    (latex_span_delimiter)))
+
+================================================================================
+Wiki links, parsed always (spec §2.3)
+================================================================================
+[[Home]] and [[Home|start here]]
+--------------------------------------------------------------------------------
+
+(inline
+  (wiki_link
+    (link_destination))
+  (wiki_link
+    (link_destination)
+    (link_text)))

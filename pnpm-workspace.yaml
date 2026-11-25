@@ -1,0 +1,11 @@
+packages:
+  - tree-sitter
+  - tests
+
+allowBuilds:
+  # Downloads the tree-sitter CLI's binary.
+  tree-sitter-cli: true
+  # Builds tree-sitter-markdown's Node binding: only its grammars are read here.
+  "@tree-sitter-grammars/tree-sitter-markdown": false
+  # The Node bindings of tree-sitter, for the binding's test.
+  tree-sitter: true

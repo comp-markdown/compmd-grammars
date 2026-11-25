@@ -1,0 +1,143 @@
+[
+  {
+    "name": "container",
+    "section": "§3, §4.1",
+    "document": "::: card {title=\"Setup\"}\nRun `rayplay init`.\n::: /card\n",
+    "tokens": [
+      [":::", "component-marker"],
+      ["card", "component-name"],
+      ["{", "param-brace"],
+      ["title", "param-key"],
+      ["=", "param-operator"],
+      ["\"Setup\"", "param-string"],
+      ["}", "param-brace"],
+      [":::", "component-marker"],
+      ["/", "component-marker"],
+      ["card", "component-name"]
+    ]
+  },
+  {
+    "name": "continuation",
+    "section": "§5.2",
+    "document": "::: grid {gap=l align-items=start}\n::: + md:grid-template-columns=\"2fr 1fr\"\n::: + lg:gap=2.5rem\n\nText.\n::: /grid\n",
+    "tokens": [
+      ["grid", "component-name"],
+      ["gap", "param-key"],
+      ["l", "param-bare"],
+      ["align-items", "param-key"],
+      ["start", "param-bare"],
+      [":::", "component-marker"],
+      ["+", "component-marker"],
+      ["md", "breakpoint"],
+      [":", "param-operator"],
+      ["grid-template-columns", "param-key"],
+      ["\"2fr 1fr\"", "param-string"],
+      ["+", "component-marker"],
+      ["lg", "breakpoint"],
+      ["gap", "param-key"],
+      ["2.5rem", "param-bare"],
+      ["grid", "component-name"]
+    ]
+  },
+  {
+    "name": "leaf",
+    "section": "§3, §4.3",
+    "document": ":: chart[Weekly installs] {src=installs.csv}\n",
+    "tokens": [
+      ["::", "component-marker"],
+      ["chart", "component-name"],
+      ["[", "fallback-bracket"],
+      ["]", "fallback-bracket"],
+      ["src", "param-key"],
+      ["installs.csv", "param-bare"]
+    ]
+  },
+  {
+    "name": "slot",
+    "section": "§4.2",
+    "document": "::: card\nBody.\n\n:: #footer\nThe footer.\n::: /card\n",
+    "tokens": [
+      ["card", "component-name"],
+      ["::", "component-marker"],
+      ["#", "component-marker"],
+      ["footer", "slot-name"]
+    ]
+  },
+  {
+    "name": "in a list item and a block quote",
+    "section": "§4.1",
+    "document": "- Install\n\n  ::: card {title=\"Setup\"}\n  Run `rayplay init`.\n  ::: /card\n\n> ::: callout {kind=tip}\n> A callout in a quote.\n> ::: /callout\n",
+    "tokens": [
+      ["card", "component-name"],
+      ["card", "component-name"],
+      ["callout", "component-name"],
+      ["kind", "param-key"],
+      ["tip", "param-bare"],
+      ["/", "component-marker"],
+      ["callout", "component-name"]
+    ]
+  },
+  {
+    "name": "nested, with a heading",
+    "section": "§4.1",
+    "document": "::: box\n## Inside\n\n::: box {.inner}\nDeeper.\n::: /box\n::: /box\n",
+    "tokens": [
+      ["box", "component-name"],
+      ["box", "component-name"],
+      [".", "param-class"],
+      ["inner", "param-class"],
+      ["box", "component-name"],
+      ["box", "component-name"]
+    ]
+  },
+  {
+    "name": "params of every form",
+    "section": "§5.1",
+    "document": ":: badge[New] {title=\"Setup\" icon=rocket count=3 open tags=[\"a\",\"b\"] meta={\"id\":1} .wide #intro md:gap=l tone=(status == \"done\" ? \"success\" : \"neutral\")}\n",
+    "tokens": [
+      ["title", "param-key"],
+      ["\"Setup\"", "param-string"],
+      ["icon", "param-key"],
+      ["rocket", "param-bare"],
+      ["count", "param-key"],
+      ["3", "param-bare"],
+      ["open", "param-key"],
+      ["tags", "param-key"],
+      ["meta", "param-key"],
+      [".", "param-class"],
+      ["wide", "param-class"],
+      ["#", "param-id"],
+      ["intro", "param-id"],
+      ["md", "breakpoint"],
+      ["gap", "param-key"],
+      ["tone", "param-key"],
+      ["(", "expression-paren"],
+      [")", "expression-paren"]
+    ]
+  },
+  {
+    "name": "a broken quote damages only its line",
+    "section": "§5",
+    "document": "::: card {icon=rocket title=\"Setup}\nText with :badge[x]{tone=\"info}.\n\n::: + gap=\n::: /card\n",
+    "tokens": [
+      ["card", "component-name"],
+      ["badge", "component-name"],
+      ["+", "component-marker"],
+      ["/", "component-marker"],
+      ["card", "component-name"]
+    ]
+  },
+  {
+    "name": "a string with escapes and interpolation",
+    "section": "§3.1, §8.1",
+    "document": ":: note[x] {title=\"Step {{n}}: \\\"go\\\"\" path=\"C:\\dir\"}\n",
+    "tokens": [
+      ["\"Step {{n}}: \\\"go\\\"\"", "param-string"],
+      ["{{", "interpolation-brace"],
+      ["n", "interpolation-path"],
+      ["}}", "interpolation-brace"],
+      ["\\\"", "string-escape"],
+      ["\"C:\\dir\"", "param-string"]
+    ]
+  }
+]

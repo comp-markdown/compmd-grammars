@@ -1,0 +1,58 @@
+[
+  {
+    "name": "with params",
+    "section": "§3, §4.4",
+    "document": "This is :badge[beta]{tone=info} today.\n",
+    "tokens": [
+      [":", "component-marker"],
+      ["badge", "component-name"],
+      ["[", "fallback-bracket"],
+      ["]", "fallback-bracket"],
+      ["{", "param-brace"],
+      ["tone", "param-key"],
+      ["info", "param-bare"],
+      ["}", "param-brace"]
+    ]
+  },
+  {
+    "name": "nested in a fallback",
+    "section": "§4.4",
+    "document": "A :tip[see :badge[new]] here.\n",
+    "tokens": [
+      ["tip", "component-name"],
+      ["badge", "component-name"]
+    ]
+  },
+  {
+    "name": "in a heading and a leaf's fallback",
+    "section": "§4.4",
+    "document": "## Status :badge[beta]\n\n:: figure[A :mark[bright] sky] {src=sky.jpg}\n",
+    "tokens": [
+      ["badge", "component-name"],
+      ["figure", "component-name"],
+      ["mark", "component-name"]
+    ]
+  },
+  {
+    "name": "followed by an interpolation",
+    "section": "§3.1",
+    "document": "Hello :badge[x]{{md.doc.name}}.\n",
+    "tokens": [
+      ["badge", "component-name"],
+      ["{{", "interpolation-brace"],
+      ["md.doc.name", "interpolation-path"],
+      ["}}", "interpolation-brace"]
+    ]
+  },
+  {
+    "name": "a code span in a fallback",
+    "section": "§3.2, rule 9",
+    "document": "See :a[b `c]` d]{x=1} now.\n",
+    "tokens": [
+      ["a", "component-name"],
+      ["[", "fallback-bracket"],
+      ["{", "param-brace"],
+      ["x", "param-key"]
+    ]
+  }
+]

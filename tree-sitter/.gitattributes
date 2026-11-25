@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Generated source files: each grammar's parser, which tree-sitter grammars commit
+*/src/*.json linguist-generated
+*/src/parser.c linguist-generated
+*/src/tree_sitter/* linguist-generated
+*/queries/injections.scm linguist-generated

@@ -1,0 +1,57 @@
+{
+  "name": "tree-sitter-compmd",
+  "version": "0.1.0",
+  "description": "CompMD's grammar for tree-sitter: grammars extending tree-sitter-markdown's, with queries for highlighting, folds, injections and text objects.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comp-markdown/compmd-grammars.git",
+    "directory": "tree-sitter"
+  },
+  "homepage": "https://compmd.dev/",
+  "keywords": ["compmd", "markdown", "tree-sitter", "incremental", "parsing"],
+  "type": "module",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "files": [
+    "tree-sitter.json",
+    "LICENSE",
+    "THIRD-PARTY-NOTICES.md",
+    "binding.gyp",
+    "bindings/node/*",
+    "compmd/grammar.js",
+    "compmd/queries/*",
+    "compmd/src/**",
+    "compmd-inline/grammar.js",
+    "compmd-inline/queries/*",
+    "compmd-inline/src/**",
+    "cel/grammar.js",
+    "cel/queries/*",
+    "cel/src/**",
+    "common/*"
+  ],
+  "scripts": {
+    "install": "node-gyp-build",
+    "generate": "pnpm --dir compmd exec tree-sitter generate && pnpm --dir compmd-inline exec tree-sitter generate && pnpm --dir cel exec tree-sitter generate && node scripts/injections.js",
+    "build:wasm": "pnpm --dir compmd exec tree-sitter build --wasm && pnpm --dir compmd-inline exec tree-sitter build --wasm && pnpm --dir cel exec tree-sitter build --wasm",
+    "check": "node scripts/injections.js --check",
+    "test": "pnpm --dir compmd exec tree-sitter test && pnpm --dir compmd-inline exec tree-sitter test && pnpm --dir cel exec tree-sitter test && node --test bindings/node/binding_test.js"
+  },
+  "dependencies": {
+    "node-addon-api": "^8.9.2",
+    "node-gyp-build": "^4.8.4"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.25.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@tree-sitter-grammars/tree-sitter-markdown": "github:tree-sitter-grammars/tree-sitter-markdown#v0.5.4",
+    "tree-sitter": "0.25.1",
+    "tree-sitter-cli": "0.27.2"
+  }
+}

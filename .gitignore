@@ -1,0 +1,8 @@
+node_modules/
+# What `tree-sitter build` and `tree-sitter test` write; the generated parsers in `src/` are committed.
+*.dylib
+*.so
+*.dll
+*.wasm
+build/
+target/

@@ -1,0 +1,75 @@
+================================================================================
+A conditional (spec §8.2)
+================================================================================
+status == "done" ? "success" : "neutral"
+--------------------------------------------------------------------------------
+
+(source
+  (conditional_expression
+    (binary_expression
+      (identifier)
+      (string))
+    (string)
+    (string)))
+
+================================================================================
+Calls, members and a macro (spec §8.2)
+================================================================================
+md.sum(md.data.sales.map(s, s.amount)) > 5 && !(x in ["a", 'b'])
+--------------------------------------------------------------------------------
+
+(source
+  (binary_expression
+    (binary_expression
+      (call_expression
+        (member_expression
+          (identifier)
+          (identifier))
+        (arguments
+          (call_expression
+            (member_expression
+              (member_expression
+                (member_expression
+                  (identifier)
+                  (identifier))
+                (identifier))
+              (identifier))
+            (arguments
+              (identifier)
+              (member_expression
+                (identifier)
+                (identifier))))))
+      (number))
+    (unary_expression
+      (parenthesized_expression
+        (binary_expression
+          (identifier)
+          (list
+            (string)
+            (string)))))))
+
+================================================================================
+Literals (spec §8.2)
+================================================================================
+{"one": r"x\y", 1u: b'z', 0x1F: 2.5e-3, "t": true, "n": null}[k]
+--------------------------------------------------------------------------------
+
+(source
+  (index_expression
+    (map
+      (map_entry
+        (string)
+        (string))
+      (map_entry
+        (number)
+        (bytes))
+      (map_entry
+        (number)
+        (number))
+      (map_entry
+        (string)
+        (true))
+      (map_entry
+        (string)
+        (null)))
+    (identifier)))

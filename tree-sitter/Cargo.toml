@@ -1,0 +1,44 @@
+[package]
+name = "tree-sitter-compmd"
+description = "CompMD's grammar for tree-sitter: grammars extending tree-sitter-markdown's, with queries for highlighting, folds, injections and text objects."
+version = "0.1.0"
+authors = ["The CompMD authors"]
+license = "MIT"
+readme = "README.md"
+keywords = ["incremental", "parsing", "tree-sitter", "compmd", "markdown"]
+categories = ["parser-implementations", "parsing", "text-editors"]
+repository = "https://github.com/comp-markdown/compmd-grammars"
+homepage = "https://compmd.dev/"
+edition = "2024"
+autoexamples = false
+
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "compmd/src/*",
+  "compmd/src/tree_sitter/*",
+  "compmd/queries/*",
+  "compmd-inline/src/*",
+  "compmd-inline/src/tree_sitter/*",
+  "compmd-inline/queries/*",
+  "cel/src/*",
+  "cel/src/tree_sitter/*",
+  "cel/queries/*",
+  "common/params.h",
+  "/tree-sitter.json",
+  "/README.md",
+  "/LICENSE",
+  "/THIRD-PARTY-NOTICES.md",
+]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language = "0.1"
+
+[build-dependencies]
+cc = "1.2"
+
+[dev-dependencies]
+tree-sitter = "0.27.2"

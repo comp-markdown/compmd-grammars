@@ -1,0 +1,239 @@
+================================================================================
+A container, its closer and its params (spec §4.1)
+================================================================================
+
+::: card {title="Setup" .wide md:gap=l}
+Run it.
+::: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (component_container
+      (container_opener
+        (component_marker)
+        (component_name)
+        (param_list
+          (param
+            (param_key
+              (param_name))
+            (string
+              (string_content)))
+          (param
+            (class_name))
+          (param
+            (param_key
+              (breakpoint)
+              (param_name))
+            (bare_value))))
+      (block_continuation)
+      (paragraph
+        (inline)
+        (block_continuation))
+      (container_closer
+        (component_marker)
+        (component_name)))))
+
+================================================================================
+A container in a list item (spec §4.1)
+================================================================================
+
+- Install
+
+  ::: card
+  In a list.
+  ::: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (list
+      (list_item
+        (list_marker_minus)
+        (paragraph
+          (inline)
+          (block_continuation))
+        (block_continuation)
+        (component_container
+          (container_opener
+            (component_marker)
+            (component_name))
+          (block_continuation)
+          (paragraph
+            (inline)
+            (block_continuation))
+          (container_closer
+            (component_marker)
+            (component_name)))))))
+
+================================================================================
+A closer inside a list item doesn't close the container around it (spec §4.1, F032)
+================================================================================
+
+::: card
+- item
+  ::: /card
+::: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (component_container
+      (container_opener
+        (component_marker)
+        (component_name))
+      (block_continuation)
+      (list
+        (list_item
+          (list_marker_minus)
+          (paragraph
+            (inline)
+            (block_continuation))
+          (container_closer
+            (component_marker)
+            (component_name)
+            (block_continuation))))
+      (container_closer
+        (component_marker)
+        (component_name)))))
+
+================================================================================
+An unclosed container ends with the document (spec §4.1, F004)
+================================================================================
+
+::: card
+Text.
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (component_container
+      (container_opener
+        (component_marker)
+        (component_name))
+      (block_continuation)
+      (paragraph
+        (inline)))))
+
+================================================================================
+A container opener interrupts a paragraph (spec §3.2, W108)
+================================================================================
+
+Text.
+::: card
+::: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (paragraph
+      (inline))
+    (component_container
+      (container_opener
+        (component_marker)
+        (component_name))
+      (block_continuation)
+      (container_closer
+        (component_marker)
+        (component_name)))))
+
+================================================================================
+A leaf with its fallback and params, a slot and a continuation line (spec §4.2, §4.3, §5.2)
+================================================================================
+
+::: card
+::: + icon=rocket
+:: chart[Weekly *installs*] {src=installs.csv data=(md.data.rows)}
+:: #footer
+::: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (component_container
+      (container_opener
+        (component_marker)
+        (component_name))
+      (block_continuation)
+      (param_continuation
+        (component_marker)
+        (param
+          (param_key
+            (param_name))
+          (bare_value))
+        (block_continuation))
+      (component_leaf
+        (component_marker)
+        (component_name)
+        (fallback
+          (inline))
+        (param_list
+          (param
+            (param_key
+              (param_name))
+            (bare_value))
+          (param
+            (param_key
+              (param_name))
+            (expression
+              (expression_code))))
+        (block_continuation))
+      (component_slot
+        (component_marker)
+        (slot_name)
+        (block_continuation))
+      (container_closer
+        (component_marker)
+        (component_name)))))
+
+================================================================================
+Malformed component lines (spec §3.2, rule 7)
+================================================================================
+
+:::card
+:: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (malformed_component_line
+      (component_marker))
+    (malformed_component_line
+      (component_marker))))
+
+================================================================================
+A broken param damages only its line (spec §5)
+================================================================================
+
+::: card {title="Setup}
+Text.
+::: + gap=
+::: /card
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (component_container
+      (container_opener
+        (component_marker)
+        (component_name)
+        (invalid_params))
+      (block_continuation)
+      (paragraph
+        (inline)
+        (block_continuation))
+      (param_continuation
+        (component_marker)
+        (invalid_params)
+        (block_continuation))
+      (container_closer
+        (component_marker)
+        (component_name)))))

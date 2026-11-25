@@ -1,0 +1,71 @@
+[
+  {
+    "name": "YAML frontmatter's md key",
+    "section": "§2.1",
+    "document": "---\nmd:\n  version: 1\n  lang: en\ntitle: Release notes\n---\n\nText.\n",
+    "tokens": [["md", "frontmatter-key"]]
+  },
+  {
+    "name": "TOML frontmatter's md keys",
+    "section": "§2.1",
+    "document": "+++\ntitle = \"Notes\"\nmd.version = 1\n[md]\nlang = \"en\"\n[[md.data]]\nfrom = \"sales.csv\"\n+++\n\nText.\n",
+    "tokens": [
+      ["md", "frontmatter-key"],
+      ["md", "frontmatter-key"],
+      ["md", "frontmatter-key"]
+    ]
+  },
+  {
+    "name": "interpolation in text",
+    "section": "§8.1",
+    "document": "Install RayPlay {{md.doc.version}} with {{ md.doc.tool }}.\n",
+    "tokens": [
+      ["{{", "interpolation-brace"],
+      ["md.doc.version", "interpolation-path"],
+      ["}}", "interpolation-brace"],
+      ["md.doc.tool", "interpolation-path"]
+    ]
+  },
+  {
+    "name": "math",
+    "section": "§2.3",
+    "document": "In \"It costs $5 and $6. Math $x^2$\", only $x^2$ is math, and $x{y$ z}$ too.\n",
+    "tokens": [
+      ["$x^2$", "math"],
+      ["$x^2$", "math"],
+      ["$x{y$ z}$", "math"]
+    ]
+  },
+  {
+    "name": "wiki links",
+    "section": "§2.3",
+    "document": "See [[Home]] and [[Home|start here]].\n",
+    "tokens": [
+      ["Home", "wiki-link-target"],
+      ["Home", "wiki-link-target"],
+      ["start here", "wiki-link-label"]
+    ]
+  },
+  {
+    "name": "a compmd definition",
+    "section": "§7.2",
+    "document": "```compmd component=card {display=flex gap=s}\nparams:\n  title: string\nslots: [default, footer]\n---\n# {{title}}\n{{md.slot}}\n```\n",
+    "tokens": [
+      ["card", "component-name"],
+      ["display", "param-key"],
+      ["---", "definition-separator"],
+      ["{{", "interpolation-brace"],
+      ["title", "interpolation-path"],
+      ["md.slot", "interpolation-path"]
+    ]
+  },
+  {
+    "name": "a signature fence",
+    "section": "§7.1",
+    "document": "```compmd component=card signature\nparams:\n  title: string\n---\n```\n",
+    "tokens": [
+      ["card", "component-name"],
+      ["signature", "param-key"]
+    ]
+  }
+]

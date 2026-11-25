@@ -1,0 +1,58 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "compmd",
+      "camelcase": "CompMD",
+      "title": "CompMD",
+      "scope": "text.compmd",
+      "path": "compmd",
+      "external-files": ["common/params.js", "../syntax/patterns.js"],
+      "file-types": ["comp.md"],
+      "highlights": "compmd/queries/highlights.scm",
+      "injections": "compmd/queries/injections.scm",
+      "injection-regex": "^(compmd|comp\\.md)$"
+    },
+    {
+      "name": "compmd_inline",
+      "camelcase": "CompMDInline",
+      "title": "CompMD (inline)",
+      "scope": "text.compmd_inline",
+      "path": "compmd-inline",
+      "external-files": ["common/params.js", "../syntax/patterns.js"],
+      "file-types": null,
+      "highlights": "compmd-inline/queries/highlights.scm",
+      "injections": "compmd-inline/queries/injections.scm"
+    },
+    {
+      "name": "cel",
+      "camelcase": "Cel",
+      "title": "CEL",
+      "scope": "source.cel",
+      "path": "cel",
+      "file-types": ["cel"],
+      "highlights": "cel/queries/highlights.scm",
+      "injection-regex": "^cel$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "CompMD's grammar for tree-sitter: grammars extending tree-sitter-markdown's, with queries for highlighting, folds, injections and text objects.",
+    "authors": [{ "name": "The CompMD authors" }],
+    "links": {
+      "repository": "https://github.com/comp-markdown/compmd-grammars",
+      "homepage": "https://compmd.dev/"
+    }
+  },
+  "bindings": {
+    "c": false,
+    "go": false,
+    "java": false,
+    "node": true,
+    "python": false,
+    "rust": true,
+    "swift": false,
+    "zig": false
+  }
+}

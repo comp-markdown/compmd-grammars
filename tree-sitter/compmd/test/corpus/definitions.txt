@@ -1,0 +1,114 @@
+================================================================================
+A component definition: its signature, `---` and its body (spec §7.2)
+================================================================================
+
+```compmd component=card {padding=m}
+params:
+  title: string
+---
+# {{title}}
+```
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (fenced_code_block
+      (fenced_code_block_delimiter)
+      (info_string
+        (language)
+        (param
+          (param_key
+            (param_name))
+          (bare_value))
+        (param_list
+          (param
+            (param_key
+              (param_name))
+            (bare_value))))
+      (block_continuation)
+      (component_definition
+        (definition_signature
+          (block_continuation)
+          (block_continuation))
+        (definition_separator)
+        (block_continuation)
+        (definition_body
+          (block_continuation)))
+      (fenced_code_block_delimiter))))
+
+================================================================================
+A signature fence: a signature alone, a `---` in it no separator (spec §7.1)
+================================================================================
+
+```compmd component=card signature
+params:
+  title: string
+---
+```
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (fenced_code_block
+      (fenced_code_block_delimiter)
+      (info_string
+        (language)
+        (param
+          (param_key
+            (param_name))
+          (bare_value))
+        (param
+          (param_key
+            (param_name))))
+      (block_continuation)
+      (component_definition
+        (definition_signature
+          (block_continuation)
+          (block_continuation)
+          (block_continuation)))
+      (fenced_code_block_delimiter))))
+
+================================================================================
+An example and a renderer's block are code (spec §7.7, §7.8)
+================================================================================
+
+```compmd {render=both}
+Hello :badge[x].
+```
+
+~~~mermaid {theme=dark}
+graph LR; A --> B
+~~~
+
+--------------------------------------------------------------------------------
+
+(document
+  (section
+    (fenced_code_block
+      (fenced_code_block_delimiter)
+      (info_string
+        (language)
+        (param_list
+          (param
+            (param_key
+              (param_name))
+            (bare_value))))
+      (block_continuation)
+      (code_fence_content
+        (block_continuation))
+      (fenced_code_block_delimiter))
+    (fenced_code_block
+      (fenced_code_block_delimiter)
+      (info_string
+        (language)
+        (param_list
+          (param
+            (param_key
+              (param_name))
+            (bare_value))))
+      (block_continuation)
+      (code_fence_content
+        (block_continuation))
+      (fenced_code_block_delimiter))))

@@ -1,0 +1,12 @@
+{
+  "name": "compmd-grammars",
+  "private": true,
+  "description": "CompMD's grammars for editors: the tree-sitter grammar and the TextMate grammar, with the syntax and the tests they share.",
+  "devEngines": {
+    "packageManager": { "name": "pnpm", "version": "12.14.0", "onFail": "download" },
+    "runtime": { "name": "node", "version": "24", "onFail": "download" }
+  },
+  "scripts": {
+    "test": "pnpm -r --if-present test"
+  }
+}

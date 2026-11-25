@@ -1,0 +1,66 @@
+{
+  "$comment": "Where a CompMD document holds text of another language, and which, written once for every grammar. Each grammar's injection file is generated from this table (tree-sitter: tree-sitter/scripts/injections.js). A language is a name, or `info-string` for a fenced code block's language (its first word), so a renderer's block is injected by its fence's language (content languages, decision 7). For tree-sitter, `node` names the node whose text is injected, `in` the grammar whose tree has it, and `options` are injection settings.",
+  "injections": [
+    {
+      "what": "Each block's text, inline Markdown with CompMD's inline components",
+      "language": "compmd_inline",
+      "tree-sitter": [{ "in": "compmd", "node": ["inline", "pipe_table_cell"] }]
+    },
+    {
+      "what": "YAML frontmatter, between `---` lines (spec §2.1)",
+      "language": "yaml",
+      "tree-sitter": [{ "in": "compmd", "node": ["minus_metadata"], "options": ["include-children", "between-delimiter-lines"] }]
+    },
+    {
+      "what": "TOML frontmatter, between `+++` lines (spec §2.1)",
+      "language": "toml",
+      "tree-sitter": [{ "in": "compmd", "node": ["plus_metadata"], "options": ["include-children", "between-delimiter-lines"] }]
+    },
+    {
+      "what": "An expression param's CEL (spec §8.2)",
+      "language": "cel",
+      "tree-sitter": [
+        { "in": "compmd", "node": ["expression_code"] },
+        { "in": "compmd_inline", "node": ["expression_code"] }
+      ]
+    },
+    {
+      "what": "A JSON param value (spec §3.1)",
+      "language": "json",
+      "tree-sitter": [
+        { "in": "compmd", "node": ["json"] },
+        { "in": "compmd_inline", "node": ["json"] }
+      ]
+    },
+    {
+      "what": "A component definition's or a signature fence's signature (spec §7.1, §7.3)",
+      "language": "yaml",
+      "tree-sitter": [{ "in": "compmd", "node": ["definition_signature"] }]
+    },
+    {
+      "what": "A component definition's body, CompMD (spec §7.2)",
+      "language": "compmd",
+      "tree-sitter": [{ "in": "compmd", "node": ["definition_body"] }]
+    },
+    {
+      "what": "A fenced code block's text, by its fence's language: a renderer's block, or a ```compmd example, CompMD again (spec §7.7, §7.8)",
+      "language": "info-string",
+      "tree-sitter": [{ "in": "compmd", "node": ["code_fence_content"] }]
+    },
+    {
+      "what": "An HTML block (spec §2.3)",
+      "language": "html",
+      "tree-sitter": [{ "in": "compmd", "node": ["html_block"], "options": ["include-children", "combined"] }]
+    },
+    {
+      "what": "Inline HTML (spec §2.3)",
+      "language": "html",
+      "tree-sitter": [{ "in": "compmd_inline", "node": ["html_tag"] }]
+    },
+    {
+      "what": "Math's TeX (spec §2.3)",
+      "language": "latex",
+      "tree-sitter": [{ "in": "compmd_inline", "node": ["latex_content"] }]
+    }
+  ]
+}
