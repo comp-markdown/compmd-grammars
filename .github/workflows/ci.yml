@@ -1,6 +1,7 @@
 # CI: the generated parsers are what their grammars generate, the injection queries what syntax/injections.json says,
-# and every test passes: each grammar's corpus, the bindings', the shared test set, and the spec's examples and the
-# conformance set of comp-markdown/compmd at the release tests/compmd-version names.
+# Lezer's copy of syntax/ is current, and every test passes: each grammar's corpus, the bindings', the Lezer grammar's,
+# the shared test set on tree-sitter and Lezer, and the spec's examples and the conformance set of comp-markdown/compmd
+# at the release tests/compmd-version names.
 name: CI
 
 on:
@@ -44,6 +45,10 @@ jobs:
       - run: pnpm --dir tree-sitter test
       - run: cargo test --manifest-path tree-sitter/Cargo.toml
       - run: pnpm --dir tree-sitter run build:wasm
+      # The Lezer grammar's copy of syntax/ is checked by its test; the shared tests import its build.
+      - run: pnpm --dir lezer lint
+      - run: pnpm --dir lezer test
+      - run: pnpm --dir lezer build
       - run: pnpm --dir tests test
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

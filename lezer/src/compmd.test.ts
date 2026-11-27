@@ -42,7 +42,8 @@ describe("the spec's complete example", () => {
       InlineComponent: count("InlineComponent"),
       WikiLink: count("WikiLink"),
       InlineMath: count("InlineMath"),
-      // 12 in text and fallbacks, 1 in a quoted param; the 2 in link destinations are a known gap (README).
+      // 12 in text and fallbacks, 1 in a quoted param, 3 in the `card` definition's body; the 2 in link destinations
+      // are a known gap (README).
       Interpolation: count("Interpolation"),
     }).toEqual({
       ComponentOpen: 13,
@@ -54,7 +55,7 @@ describe("the spec's complete example", () => {
       InlineComponent: 4,
       WikiLink: 1,
       InlineMath: 1,
-      Interpolation: 13,
+      Interpolation: 16,
     });
   });
 
@@ -70,7 +71,7 @@ describe("the spec's complete example", () => {
     tree.iterate({
       enter: (node) => {
         const highlighted =
-          /^(ComponentMark|ComponentName|ComponentSlotName|ParamKey|ParamString|ParamExpression|ParamJson|ParamBare|ParamClass|ParamId|ParamBreakpoint|InterpolationExpression|WikiLinkTarget|WikiLinkLabel|InlineMath|Frontmatter)$/;
+          /^(ComponentMark|ComponentName|ComponentSlotName|ParamKey|ParamOperator|ParamString|ParamEscape|ParamExpression|ParamExpressionMark|ParamJson|ParamBare|ParamClassMark|ParamClassName|ParamIdMark|ParamIdName|ParamBreakpoint|InterpolationExpression|WikiLinkTarget|WikiLinkLabel|InlineMath|Frontmatter|FrontmatterKey|DefinitionSeparator)$/;
         if (highlighted.test(node.name) && !styled.has(node.from)) unstyled.push(`${node.name}: ${text.slice(node.from, node.to)}`);
       },
     });

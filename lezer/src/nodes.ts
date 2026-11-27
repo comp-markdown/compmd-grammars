@@ -15,7 +15,7 @@ export const COMPONENT_LINES = [
 export type ComponentLine = (typeof COMPONENT_LINES)[number];
 
 /** Block nodes other than component lines. */
-export const OTHER_BLOCKS = ["Frontmatter", "MathBlock"] as const;
+export const OTHER_BLOCKS = ["Frontmatter", "MathBlock", "ComponentDefinition"] as const;
 
 /** Inline and part nodes: the pieces of a component line, an inline component, an interpolation, a wiki link, math. */
 export const PARTS = [
@@ -29,13 +29,24 @@ export const PARTS = [
   "ParamBrace",
   "ParamKey",
   "ParamBreakpoint",
-  "ParamEquals",
+  "ParamOperator",
   "ParamString",
+  "ParamEscape",
   "ParamExpression",
+  "ParamExpressionMark",
   "ParamJson",
   "ParamBare",
   "ParamClass",
+  "ParamClassMark",
+  "ParamClassName",
   "ParamId",
+  "ParamIdMark",
+  "ParamIdName",
+  "ParamInvalid",
+  "DefinitionInfo",
+  "DefinitionSignature",
+  "DefinitionSeparator",
+  "DefinitionBody",
   "Interpolation",
   "InterpolationMark",
   "InterpolationExpression",
@@ -47,6 +58,7 @@ export const PARTS = [
   "InlineMathMark",
   "MathBlockMark",
   "FrontmatterMark",
+  "FrontmatterKey",
 ] as const;
 
 /**
@@ -58,4 +70,5 @@ export const COMPMD_NODES: ReadonlySet<string> = new Set<string>([
   "InlineComponent",
   "Interpolation",
   "Frontmatter",
+  "ComponentDefinition",
 ]);

@@ -2,6 +2,7 @@
 
 import type { MarkdownConfig } from "@lezer/markdown";
 import { endLeafAtComponentLine, parseComponentLineBlock } from "./component-line.ts";
+import { parseDefinition } from "./definition.ts";
 import { parseFrontmatter } from "./frontmatter.ts";
 import { compmdHighlighting } from "./highlighting.ts";
 import { parseInlineComponent } from "./inline-component.ts";
@@ -11,8 +12,9 @@ import { COMPONENT_LINES, OTHER_BLOCKS, PARTS } from "./nodes.ts";
 import { parseWikiLink } from "./wiki-link.ts";
 
 /**
- * CompMD's syntax (spec v1 §2.1, §2.3, §3, §8.1) for `@lezer/markdown`: frontmatter, component lines, inline
- * components with their params and fallbacks, interpolation, wiki links, and math by Pandoc's rule. Use it with GFM,
+ * CompMD's syntax (spec v1 §2.1, §2.3, §3, §7.1, §7.2, §8.1) for `@lezer/markdown`: frontmatter, component lines,
+ * inline components with their params and fallbacks, component definitions and signature fences, interpolation, wiki
+ * links, and math by Pandoc's rule. Use it with GFM,
  * which CompMD's base syntax includes.
  *
  * @example
@@ -29,6 +31,7 @@ export const compmd: MarkdownConfig = {
   props: [compmdHighlighting],
   parseBlock: [
     { name: "Frontmatter", parse: parseFrontmatter, before: "HorizontalRule" },
+    { name: "ComponentDefinition", parse: parseDefinition, before: "FencedCode" },
     { name: "ComponentLine", parse: parseComponentLineBlock, before: "FencedCode", endLeaf: endLeafAtComponentLine },
     { name: "MathBlock", parse: parseMathBlock, before: "FencedCode", endLeaf: endLeafAtMathBlock },
   ],

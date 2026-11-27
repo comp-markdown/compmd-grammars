@@ -48,8 +48,14 @@ describe("component lines", () => {
   it("marks lines that start with :: but match no form as malformed (F016)", () => {
     expect(nodes(":::card\n")).toContain("ComponentMalformed: :::card");
     expect(nodes(":: /card\n")).toContain("ComponentMalformed: :: /card");
-    expect(nodes("::: card {a=1\n")).toContain("ComponentMalformed: ::: card {a=1");
     expect(nodes(":: chart[never closed\n")).toContain("ComponentMalformed: :: chart[never closed");
+  });
+
+  it("keeps a line's form when its param list isn't closed, the list invalid (spec §5)", () => {
+    expect(nodes('::: card {title="Setup}\n')).toEqual(
+      expect.arrayContaining(['ComponentOpen: ::: card {title="Setup}', "ComponentName: card", 'ParamInvalid: {title="Setup}']),
+    );
+    expect(nodes(":: chart[A] {x=1\n")).toEqual(expect.arrayContaining(["ComponentLeaf: :: chart[A] {x=1", "ParamInvalid: {x=1"]));
   });
 
   it("ends a paragraph, so a component line is never its lazy continuation", () => {

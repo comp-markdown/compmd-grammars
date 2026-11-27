@@ -8,6 +8,20 @@ describe("frontmatter", () => {
     expect(found.some((node) => /^(SetextHeading\d|HorizontalRule):/.test(node))).toBe(false);
   });
 
+  it("parses a +++ block, TOML, the same way", () => {
+    expect(nodes('+++\ntitle = "A"\n+++\n')[0]).toBe('Frontmatter: +++\ntitle = "A"\n+++');
+  });
+
+  it("marks the md key, in YAML and in each of TOML's forms", () => {
+    expect(nodes("---\nmd:\n  version: 1\ntitle: A\n---\n")).toContain("FrontmatterKey: md");
+    const toml = nodes('+++\nmd.version = 1\n[md]\nlang = "en"\n[[md.data]]\nfrom = "a.csv"\n+++\n');
+    expect(toml.filter((node) => node === "FrontmatterKey: md")).toHaveLength(3);
+  });
+
+  it("doesn't mark a key that only starts with md", () => {
+    expect(hasNode("---\nmdx: 1\n---\n", "FrontmatterKey")).toBe(false);
+  });
+
   it("isn't frontmatter anywhere but the start", () => {
     expect(hasNode("Text\n\n---\nx: 1\n---\n", "Frontmatter")).toBe(false);
   });

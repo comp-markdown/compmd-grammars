@@ -3,9 +3,13 @@
 import type { InlineContext } from "@lezer/markdown";
 import { fallbackElement, paramListElement } from "./component-parts.ts";
 import { fallbackEnd } from "./fallback.ts";
-import { NAME, scanParamList } from "./params.ts";
+import { scanParamList } from "./params.ts";
+import { PATTERNS } from "./syntax.ts";
 
 const COLON = 58;
+
+/** `:name[`, an inline component's start (`syntax/patterns.js`). */
+const START = new RegExp(`^${PATTERNS.inlineComponentStart}`);
 
 /** Where an inline component may start (spec §3.2 rule 4): at the start, or after white space or punctuation other than `:` and `\`. */
 function mayStartAt(cx: InlineContext, pos: number): boolean {
@@ -18,10 +22,9 @@ function mayStartAt(cx: InlineContext, pos: number): boolean {
 export function parseInlineComponent(cx: InlineContext, next: number, pos: number): number {
   if (next !== COLON || !mayStartAt(cx, pos)) return -1;
   const text = cx.slice(pos, cx.end);
-  const name = NAME.exec(text.slice(1));
-  if (!name) return -1;
-  const fallbackAt = 1 + name[0].length;
-  if (text[fallbackAt] !== "[") return -1;
+  const start = START.exec(text);
+  if (!start) return -1;
+  const fallbackAt = start[0].length - 1;
   const fallback = fallbackEnd(text, fallbackAt);
   if (fallback === undefined) return -1;
   const list = text.startsWith("{{", fallback) ? undefined : scanParamList(text, fallback);

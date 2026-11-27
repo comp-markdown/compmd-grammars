@@ -6,7 +6,8 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/comp-markdown/lezer-compmd.git"
+    "url": "https://github.com/comp-markdown/compmd-grammars.git",
+    "directory": "lezer"
   },
   "keywords": ["compmd", "lezer", "codemirror", "markdown"],
   "exports": {
@@ -17,9 +18,10 @@
   },
   "files": ["dist"],
   "scripts": {
+    "generate": "node generate.js",
     "build": "tsc -p tsconfig.build.json",
     "lint": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "node generate.js --check && vitest run"
   },
   "peerDependencies": {
     "@lezer/common": "^1.2.0",

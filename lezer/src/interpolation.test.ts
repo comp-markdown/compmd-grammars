@@ -8,8 +8,9 @@ describe("interpolation", () => {
     );
   });
 
-  it("allows spaces around the path", () => {
-    expect(hasNode("{{ md.doc.title }}\n", "Interpolation")).toBe(true);
+  it("allows spaces and tabs around the path, which stay out of it", () => {
+    expect(nodes("{{ md.doc.title }}\n")).toContain("InterpolationExpression: md.doc.title");
+    expect(nodes("{{\tmd.doc.title\t}}\n")).toContain("InterpolationExpression: md.doc.title");
   });
 
   it("leaves an escaped one as text", () => {

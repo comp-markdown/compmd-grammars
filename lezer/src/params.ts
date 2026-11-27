@@ -1,23 +1,33 @@
 // A CompMD param list (spec §3.1, §5.1), scanned into spans. Each value finds its own end from its first character,
-// so a broken quote or bracket damages only its own line (spec §5).
+// so a broken quote or bracket damages only its own line (spec §5). The pieces every grammar shares (a name, a bare
+// value, an escape) are `syntax/patterns.js`'s.
+
+import { PATTERNS } from "./syntax.ts";
 
 /** The kind of a span inside a param list. */
 export type ParamPart =
   | "ParamKey"
   | "ParamBreakpoint"
-  | "ParamEquals"
+  | "ParamOperator"
   | "ParamString"
+  | "ParamEscape"
   | "ParamExpression"
+  | "ParamExpressionMark"
   | "ParamJson"
   | "ParamBare"
   | "ParamClass"
-  | "ParamId";
+  | "ParamClassMark"
+  | "ParamClassName"
+  | "ParamId"
+  | "ParamIdMark"
+  | "ParamIdName";
 
-/** One span of a param list, as offsets into the scanned text. */
+/** One span of a param list, as offsets into the scanned text, with the spans inside it. */
 export interface Span {
   readonly type: ParamPart;
   readonly from: number;
   readonly to: number;
+  readonly parts?: readonly Span[];
 }
 
 /** Spans found, and the offset where scanning stopped. */
@@ -27,7 +37,10 @@ export interface Scanned {
 }
 
 /** A component's, slot's or param key's name (spec §3.1). */
-export const NAME = /^[A-Za-z][A-Za-z0-9_-]*/;
+const NAME = new RegExp(`^${PATTERNS.name}`);
+
+const BARE_VALUE = new RegExp(`^${PATTERNS.bareValue}`);
+const ESCAPE = new RegExp(PATTERNS.stringEscape, "g");
 
 const isSpace = (char: string | undefined): boolean => char === " " || char === "\t";
 
@@ -57,33 +70,54 @@ function bracketedEnd(text: string, from: number, open: string, close: string, q
   return text.length;
 }
 
+/** A quoted string from `from`, with its escapes. */
+function stringSpan(text: string, from: number): Span {
+  const to = stringEnd(text, from);
+  const parts = [...text.slice(from, to).matchAll(ESCAPE)].map(
+    (match): Span => ({ type: "ParamEscape", from: from + match.index, to: from + match.index + match[0].length }),
+  );
+  return { type: "ParamString", from, to, parts };
+}
+
+/** An expression `(…)` from `from`, with its parentheses when it is closed. */
+function expressionSpan(text: string, from: number): Span {
+  const to = bracketedEnd(text, from, "(", ")", "\"'");
+  const open: Span = { type: "ParamExpressionMark", from, to: from + 1 };
+  const closed = to - from > 1 && text[to - 1] === ")";
+  const parts = closed ? [open, { type: "ParamExpressionMark", from: to - 1, to } as const] : [open];
+  return { type: "ParamExpression", from, to, parts };
+}
+
 function valueSpan(text: string, from: number): Span {
   switch (text[from]) {
     case '"':
-      return { type: "ParamString", from, to: stringEnd(text, from) };
+      return stringSpan(text, from);
     case "(":
-      return { type: "ParamExpression", from, to: bracketedEnd(text, from, "(", ")", "\"'") };
+      return expressionSpan(text, from);
     case "[":
       return { type: "ParamJson", from, to: bracketedEnd(text, from, "[", "]", '"') };
     case "{":
       return { type: "ParamJson", from, to: bracketedEnd(text, from, "{", "}", '"') };
-    default: {
-      let to = from;
-      while (to < text.length && !/[\s"()[\]{}]/.test(text[to]!)) to++;
-      return { type: "ParamBare", from, to };
-    }
+    default:
+      return { type: "ParamBare", from, to: from + (BARE_VALUE.exec(text.slice(from))?.[0].length ?? 0) };
   }
 }
 
-/** A class `.name` or an id `#name` at `from`. */
+/** A class `.name` or an id `#name` at `from`, its mark and its name each a span of their own. */
 function shorthandAt(text: string, from: number): Scanned | undefined {
   const name = NAME.exec(text.slice(from + 1));
   if (!name) return undefined;
   const to = from + 1 + name[0].length;
-  return { spans: [{ type: text[from] === "." ? "ParamClass" : "ParamId", from, to }], end: to };
+  const [type, mark, named] =
+    text[from] === "." ? (["ParamClass", "ParamClassMark", "ParamClassName"] as const) : (["ParamId", "ParamIdMark", "ParamIdName"] as const);
+  const parts: Span[] = [
+    { type: mark, from, to: from + 1 },
+    { type: named, from: from + 1, to },
+  ];
+  return { spans: [{ type, from, to, parts }], end: to };
 }
 
-/** A key at `from`, with its breakpoint when written `bp:key`. */
+/** A key at `from`, with its breakpoint and the `:` after it when written `bp:key`. */
 function keyAt(text: string, from: number): Scanned | undefined {
   const first = NAME.exec(text.slice(from));
   if (!first) return undefined;
@@ -94,6 +128,7 @@ function keyAt(text: string, from: number): Scanned | undefined {
   return {
     spans: [
       { type: "ParamBreakpoint", from, to: afterFirst },
+      { type: "ParamOperator", from: afterFirst, to: afterFirst + 1 },
       { type: "ParamKey", from: afterFirst + 1, to: end },
     ],
     end,
@@ -105,13 +140,13 @@ function paramAt(text: string, from: number): Scanned | undefined {
   if (text[from] === "." || text[from] === "#") return shorthandAt(text, from);
   const key = keyAt(text, from);
   if (!key || text[key.end] !== "=") return key;
-  const equals: Span = { type: "ParamEquals", from: key.end, to: key.end + 1 };
+  const operator: Span = { type: "ParamOperator", from: key.end, to: key.end + 1 };
   const valueAt = key.end + 1;
   if (valueAt >= text.length || isSpace(text[valueAt]) || text[valueAt] === "}") {
-    return { spans: [...key.spans, equals], end: valueAt };
+    return { spans: [...key.spans, operator], end: valueAt };
   }
   const value = valueSpan(text, valueAt);
-  return { spans: [...key.spans, equals, value], end: value.to };
+  return { spans: [...key.spans, operator, value], end: value.to };
 }
 
 /**
@@ -120,7 +155,7 @@ function paramAt(text: string, from: number): Scanned | undefined {
  * @returns the spans, and where the body ended: at `stop`, the text's end, or the first thing that isn't a param.
  *
  * @example
- * scanParamBody('md:gap=l title="A"', 0); // spans ParamBreakpoint, ParamKey, ParamEquals, ParamBare, ParamKey, …
+ * scanParamBody('md:gap=l title="A"', 0); // spans ParamBreakpoint, ParamOperator, ParamKey, ParamOperator, ParamBare, …
  */
 export function scanParamBody(text: string, from: number, stop?: string): Scanned {
   const spans: Span[] = [];
@@ -142,7 +177,7 @@ export function scanParamBody(text: string, from: number, stop?: string): Scanne
  * closed.
  *
  * @example
- * scanParamList('{title="A" .wide}', 0); // spans ParamKey, ParamEquals, ParamString, ParamClass; end 17
+ * scanParamList('{title="A" .wide}', 0); // spans ParamKey, ParamOperator, ParamString, ParamClass; end 17
  */
 export function scanParamList(text: string, from: number): Scanned | undefined {
   if (text[from] !== "{") return undefined;
