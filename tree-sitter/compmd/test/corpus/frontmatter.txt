@@ -23,8 +23,7 @@ TOML frontmatter's md keys (spec §2.1)
 ================================================================================
 +++
 md.version = 1
-[md]
-lang = "en"
+md.lang = "en"
 [[md.data]]
 from = "x.csv"
 +++

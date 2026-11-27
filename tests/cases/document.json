@@ -8,7 +8,7 @@
   {
     "name": "TOML frontmatter's md keys",
     "section": "§2.1",
-    "document": "+++\ntitle = \"Notes\"\nmd.version = 1\n[md]\nlang = \"en\"\n[[md.data]]\nfrom = \"sales.csv\"\n+++\n\nText.\n",
+    "document": "+++\ntitle = \"Notes\"\nmd.version = 1\nmd.lang = \"en\"\n[[md.data]]\nfrom = \"sales.csv\"\n+++\n\nText.\n",
     "tokens": [
       ["md", "frontmatter-key"],
       ["md", "frontmatter-key"],
