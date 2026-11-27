@@ -11,6 +11,11 @@ the same way ([the design](https://github.com/comp-markdown/compmd/blob/main/doc
 
 The TextMate grammar, `@compmd/textmate` for VS Code and Shiki, comes here next.
 
+CodeMirror's grammar, `@compmd/lezer`, is in a repository of its own,
+[`comp-markdown/lezer-compmd`](https://github.com/comp-markdown/lezer-compmd): an `@lezer/markdown` extension with
+CompMD's syntax. It doesn't import `syntax/` or run `tests/` yet, so a change to the syntax here is made there too; its
+highlighting tags are to follow `tokens.json`.
+
 ## Tests
 
 ```sh
